@@ -1,0 +1,99 @@
+class patient:
+  def __init__(self,name,id,ward):
+    self.name=name
+    self.id = id
+    self.ward = ward
+
+class hospital:
+  def __init__(self,data):
+    self.patientlist = data
+  def AddPatient(self,newPatient):
+    self.patientlist.append(newPatient)
+  def DischargePatient(self,key):
+    for i in self.patientlist:
+      if(str(i.id) == key or i.name==key):
+        self.patientlist.remove(i)
+        break
+    print("Patient is discharged!")
+  def ShiftWard(self,key,ward):
+    for i in self.patientlist:
+      if(str(i.id) == key or i.name==key):
+        i.ward = ward
+    print("Patient is shifted to necessary ward")
+  def DisplayPatientStatus(self,key):
+    for i in self.patientlist:
+      if(str(i.id) == key or i.name==key):
+        print("Patient Name : " + i.name)
+        print("Patient ID : "+str(i.id))
+        print("Patient is in ward "+str(i.ward))
+        print()
+  def DisplayAllPatients(self):
+    print('------Patient Details-------')
+    for i in self.patientlist:
+      print("Patient Name : " + i.name)
+      print("Patient ID : "+str(i.id))
+      print("Patient is in ward "+str(i.ward))
+      print()
+  def HasUnattendedPatients(self):
+    for i in self.patientlist:
+      if i.ward==0:
+        return True
+
+
+class Doctor:
+  def __init__(self,id,name):
+    self.name = name
+    self.id = id
+    
+patient_list = []
+hospital_obj = hospital(patient_list)
+
+print("---Hospital Records Management ----")
+id = 0
+while True:
+  print("Please enter 1 if you are logging in as Doctor or enter 2 (Enter any other number to stop)")
+  inp = int(input())
+  if(inp == 1):
+    if(hospital_obj.HasUnattendedPatients):
+      print("There are new patients, please assign them to ward")
+      for i in hospital_obj.patientlist:
+        if(i.ward == 0):
+          print('Patient details are: ')
+          hospital_obj.DisplayPatientStatus(i.name)
+          print("Please suggest treatment:\n1.ICU\n2.Emergency\n3.General\n4.Prescribe medicines and Discharge")
+          opt = int(input())
+          if(opt == 4):
+            hospital_obj.DischargePatient(i.name)
+          else:
+            hospital_obj.ShiftWard(i.name,opt)
+    else:
+      continue
+    print("Select an option \n1.View all patients Details\n2.View particular patient details\n3.Check status and change ward")
+    option = int(input())
+    if(option==1):
+      hospital_obj.DisplayAllPatients()
+    elif(option==2):
+      print("Please enter patient's name or id")
+      key = input()
+      hospital_obj.DisplayPatientStatus(key)
+    elif(option==3):
+      print("Please enter patient's name or id")
+      key = input()
+      print('Patient details are: ')
+      hospital_obj.DisplayPatientStatus(key)
+      print("Please suggest treatment:\n1.ICU\n2.Emergency\n3.General\n4.Prescribe medicines and Discharge")
+      opt = int(input())
+      if(opt == 4):
+        hospital_obj.DischargePatient(key)
+      else:
+        hospital_obj.ShiftWard(key,opt)
+  elif(inp == 2):
+    print("Please enter your name")
+    name = input()
+    patient_obj = patient(name,id,0)
+    id+=1
+    hospital_obj.patientlist.append(patient_obj)
+    pass
+  else:
+    print("Thank you")
+    break
